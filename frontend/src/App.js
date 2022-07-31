@@ -1,32 +1,24 @@
-// import React from "react";
-// import "./App.css";
-// import MetaMaskAuth from "./metamask-auth";
-
-// function App() {
-//   return (
-//     <main>
-//       <MetaMaskAuth />
-//     </main>
-//   );
-// }
-
-// export default App;
-
 import React from "react";
 import "./styles.css";
 
 import "bootstrap/dist/css/bootstrap.css";
 
-import {AccountInfoContextProvider} from "./components/ctx/account-context"
+import { AccountInfoContextProvider } from "./components/ctx/account-context";
 import Home from "./components/home";
-
+import Employee from "./components/employee";
+import Employer from "./components/employer";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 export default function App() {
-  
-
   return (
     <AccountInfoContextProvider>
       <div className="App">
-        <Home />
+        <Router>
+          <Routes>
+            <Route exact path="/employer" element={<Employer />} />
+            <Route exact path="/employee" element={<Employee />} />
+            <Route exact path="/" element={<Home />} />
+          </Routes>
+        </Router>
       </div>
     </AccountInfoContextProvider>
   );

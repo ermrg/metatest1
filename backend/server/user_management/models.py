@@ -27,13 +27,17 @@ class UserManager(BaseUserManager):
         
 class Web3User(AbstractBaseUser):
     web3_address = models.CharField(max_length=100,unique=True)
-    is_superuser = models.BooleanField(default=False)
-    is_broker = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    role = models.CharField(max_length=100, null=True)
+    name = models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=100, null=True)
+    age = models.CharField(max_length=100, null=True)
+    sex = models.CharField(max_length=100, null=True)
+    ssn = models.CharField(max_length=100, null=True)
+    salary = models.CharField(max_length=100, null=True)
+    title = models.CharField(max_length=100, null=True)
     password = None
-
     objects = UserManager()
-
 
 
     USERNAME_FIELD = 'web3_address'

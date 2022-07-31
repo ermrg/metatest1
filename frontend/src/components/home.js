@@ -1,29 +1,47 @@
-import React from 'react'
+import React from "react";
 import AccountInfoContext from "./ctx/account-context";
 import { useEffect, useState, useContext } from "react";
-import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import UserTable from './UserTable';
-
-
-
 function Home(props) {
-    const renderTooltip = props => (
-        <Tooltip {...props}>Login!</Tooltip>
-      );
-
   const AccountCTX = useContext(AccountInfoContext);
 
-  useEffect(() => {AccountCTX.loginCheck();}, []);
+  useEffect(() => {
+    AccountCTX.loginCheck();
+  }, []);
 
-  return AccountCTX.access_token? <UserTable /> :(
-    <OverlayTrigger placement="top" overlay={renderTooltip}>
-        <Button onClick={AccountCTX.connectWallet} className="btn-main" variant="outline-warning" >Login With MetaMask</Button>
-    </OverlayTrigger>
-  )
+  return (
+    <>
+      <div className="container">
+        <div className="row">
+          {!AccountCTX.user_obj ||
+          (AccountCTX.user_obj && AccountCTX.user_obj.role != "employee") ? (
+            <div className="col">
+              <div className="bg-primary p-5 rounded">
+                <a href="/employer" className="text-white text-decoration-none">
+                  <h3>Employer </h3>
+                  Dashboard
+                </a>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {!AccountCTX.user_obj ||
+          (AccountCTX.user_obj && AccountCTX.user_obj.role != "employer") ? (
+            <div className="col">
+              <div className="bg-danger p-5 rounded">
+                <a href="/employee" className="text-white text-decoration-none">
+                  <h3>Employee </h3>
+                  Dashboard
+                </a>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
+    </>
+  );
 }
 
-
-
-export default Home
+export default Home;

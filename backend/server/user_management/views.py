@@ -28,13 +28,18 @@ class UserCaptchaView(APIView):
         # get the address from params
         address = request.GET.get('web3_address')
         # if user not exists
+        role = request.GET.get('role')
         if not Web3User.objects.filter(web3_address=address).exists():
             # create one
             Web3User(
-                web3_address = address
+                web3_address = address,
+                role = role
             ).save()
         
         user_obj = Web3User.objects.get(web3_address=address)
+
+        # if user_obj.role == "employee":
+
         # delete all the old captchas of this user 
         UserCaptcha.objects.filter(user=user_obj).delete()
         # create a new captcha
@@ -76,7 +81,9 @@ class LoginView(APIView):
                         token, created = Token.objects.get_or_create(user=user)
                         UserCaptcha.objects.filter(user=user).delete()
                         serializer = Web3UserSerializer(user)
+                        emps = serializer.get_employees()
                         content["data"] = serializer.data
+                        content["employees"] = emps
                         content["token"] = token.key
                         return Response(content, status = status.HTTP_200_OK)
                     content["message"] = "signature not valid"
@@ -94,6 +101,17 @@ class UserMeView(APIView):
         content = {}
         serializer = Web3UserSerializer(Web3User.objects.get(pk = request.user.id))
         content["data"] = serializer.data
+        content["message"] = "successfully fetched!"
+        return Response(content, status = status.HTTP_200_OK)
+
+
+# me
+class EmployeesView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self,request,*args,**kwargs):
+        content = {}
+        serializer = Web3UserSerializer()
+        content["data"] = serializer.get_employees()
         content["message"] = "successfully fetched!"
         return Response(content, status = status.HTTP_200_OK)
 

@@ -40,7 +40,6 @@ function Employer(props) {
     if (query) {
       url += "?query=" + query;
     }
-    console.log(query);
     getEmployees(url);
   }
   return AccountCTX.access_token ? (
@@ -79,7 +78,6 @@ function EmployerDetail(props) {
   function search() {
     serachEmployee(query);
   }
-  console.log(query);
   return (
     <>
       <div className="container">

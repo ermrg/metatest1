@@ -47,13 +47,11 @@ export function AccountInfoContextProvider(props) {
         web3_address: address,
         signature: signature,
       };
-      // console.log(data);
       // get token , is first_login
       axios
         .post(api_host + "/user_svc/login/", data)
         .then((response) => {
           if (response.status == 200) {
-            console.log(response.data);
             // set access token
             let access_token = null;
             if (response.data.token) {
@@ -68,7 +66,6 @@ export function AccountInfoContextProvider(props) {
               JSON.stringify(response.data.data)
             );
             window.sessionStorage.setItem("access_token", access_token);
-            // console.log("login successful");
           } else {
             alert("login failed try again!");
           }
@@ -140,7 +137,6 @@ export function AccountInfoContextProvider(props) {
     const signer = await setupWallet();
     const address = await signer.getAddress();
 
-    // console.log(user_obj,address);
     if (user_obj && access_token) {
       if (user_obj.web3_address == address) {
         setAccessToken(access_token);

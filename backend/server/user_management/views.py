@@ -12,6 +12,7 @@ import configparser
 import random
 from eth_account.messages import encode_defunct
 from web3.auto import w3
+from rest_framework.pagination import LimitOffsetPagination
 
 
 sys_random = random.SystemRandom()
@@ -107,22 +108,26 @@ class UserMeView(APIView):
 
 
 # me
-class EmployeesView(APIView):
+class EmployeesView(APIView,LimitOffsetPagination):
     permission_classes = (IsAuthenticated,)
     @swagger_auto_schema()
     def get(self,request,*args,**kwargs):
         content = {}
-        serializer = Web3UserSerializer()
-        content["data"] = serializer.get_employees()
+        qs = Web3User.objects.filter(role='employee')
+        query = self.request.query_params.get('query')
+        if query is not None:
+            qs = qs.filter(name__icontains=query)
+        results = self.paginate_queryset(qs, request, view=self)
+        serializer = Web3UserSerializer(results, many=True)
+        content["data"] = serializer.data
         content["message"] = "successfully fetched!"
-        return Response(content, status = status.HTTP_200_OK)
+        return self.get_paginated_response(serializer.data)
 
 class EmployeeView(APIView):
     permission_classes = (IsAuthenticated,)
     def get(self,request, pk=None, *args,**kwargs):
         content = {}
         id = pk or kwargs.get('pk')
-        print(id)
         serializer = Web3UserSerializer(Web3User.objects.get(pk = id))
         content["data"] = serializer.data
         content["message"] = "successfully fetched!"

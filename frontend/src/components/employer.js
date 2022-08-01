@@ -29,7 +29,7 @@ function Employer(props) {
     }
   }, [AccountCTX.access_token]);
   async function getEmployees() {
-    const meta = await axios.get(api_host + "/user_svc/get-employee", {
+    const meta = await axios.get(api_host + "/user_svc/employees", {
       headers: { authorization: AccountCTX.access_token },
     });
     setEmployees_obj(meta.data.data);
@@ -58,49 +58,61 @@ function EmployerDetail(props) {
 
   return (
     <>
-      <h1>Employee List</h1>
-      {props.employees ? (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>SN</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Age</th>
-              <th>Sex</th>
-              <th>SSN</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.employees.map((emp, key) => (
-              <tr key={key}>
-                <td>{emp.id}</td>
-                <td>
-                  <h4>{emp.name}</h4>
-                  <p>{emp.web3_address}</p>
-                </td>
-                <td>{emp.email}</td>
-                <td>{emp.age}</td>
-                <td>{emp.sex}</td>
-                <td>{emp.ssn}</td>
-                <td>
-                  <Button className="btn btn-danger">Edit</Button>
-                </td>
+      <div className="container">
+        <h1>Employee List</h1>
+        {props.employees ? (
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Age</th>
+                <th>Sex</th>
+                <th>SSN</th>
+                <th>Yearly Salary</th>
+                <th>Title</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        "No Employee Yet"
-      )}
-      <hr />
-      <Button onClick={AccountCTX.logout} className="btn-main">
-        Logout
-      </Button>
-      <a href="/" className="btn btn-success m-3">
-        Home
-      </a>
+            </thead>
+            <tbody>
+              {props.employees.map((emp, key) => (
+                <tr key={key}>
+                  <td>{emp.id}</td>
+                  <td>
+                    <h4>{emp.name}</h4>
+                    <p>{emp.web3_address}</p>
+                  </td>
+                  <td>{emp.email}</td>
+                  <td>{emp.age}</td>
+                  <td>{emp.sex}</td>
+                  <td>{emp.ssn}</td>
+                  <td>${emp.salary}</td>
+                  <td>{emp.title}</td>
+                  <td>
+                    <a
+                      type="button"
+                      href={`/edit-employee/${emp.id}`}
+                      className="btn btn-danger"
+                    >
+                      Edit
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          "No Employee Yet"
+        )}
+        <hr />
+        <Button onClick={AccountCTX.logout} className="btn-main">
+          Logout
+        </Button>
+        <a href="/" className="btn btn-success m-3">
+          Home
+        </a>
+      </div>
     </>
   );
 }

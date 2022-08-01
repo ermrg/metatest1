@@ -81,9 +81,9 @@ class LoginView(APIView):
                         token, created = Token.objects.get_or_create(user=user)
                         UserCaptcha.objects.filter(user=user).delete()
                         serializer = Web3UserSerializer(user)
-                        emps = serializer.get_employees()
+                        # emps = serializer.get_employees()
                         content["data"] = serializer.data
-                        content["employees"] = emps
+                        # content["employees"] = emps
                         content["token"] = token.key
                         return Response(content, status = status.HTTP_200_OK)
                     content["message"] = "signature not valid"
@@ -96,6 +96,7 @@ class LoginView(APIView):
 
 # me
 class UserMeView(APIView):
+    
     permission_classes = (IsAuthenticated,)
     def get(self,request,*args,**kwargs):
         content = {}
@@ -108,10 +109,43 @@ class UserMeView(APIView):
 # me
 class EmployeesView(APIView):
     permission_classes = (IsAuthenticated,)
+    @swagger_auto_schema()
     def get(self,request,*args,**kwargs):
         content = {}
         serializer = Web3UserSerializer()
         content["data"] = serializer.get_employees()
         content["message"] = "successfully fetched!"
         return Response(content, status = status.HTTP_200_OK)
+
+class EmployeeView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self,request, pk=None, *args,**kwargs):
+        content = {}
+        id = pk or kwargs.get('pk')
+        print(id)
+        serializer = Web3UserSerializer(Web3User.objects.get(pk = id))
+        content["data"] = serializer.data
+        content["message"] = "successfully fetched!"
+        return Response(content, status = status.HTTP_200_OK)
+    
+    # web3_address = openapi.Parameter('web3_address', openapi.IN_QUERY, type=openapi.TYPE_STRING, required=True)
+    name = openapi.Parameter('name', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    email = openapi.Parameter('email', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    sex = openapi.Parameter('sex', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    address = openapi.Parameter('address', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    ssn = openapi.Parameter('ssn', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    age = openapi.Parameter('age', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    salary = openapi.Parameter('salary', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    title = openapi.Parameter('title', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+    @swagger_auto_schema(manual_parameters=[name, email, address, ssn, age, sex, salary, title])
+    def put(self, request, pk, format=None,*args,**kwargs):        
+        user = Web3User.objects.get(pk = pk)
+        inputData = request.data
+        inputData['web3_address'] =  user.web3_address
+        # fix here
+        serializer = Web3UserSerializer(user, data=inputData)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

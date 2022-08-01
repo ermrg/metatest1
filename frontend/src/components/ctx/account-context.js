@@ -38,7 +38,7 @@ export function AccountInfoContextProvider(props) {
     try {
       signature = await signer.signMessage(meta.data.data.captcha);
     } catch (e) {
-      console.log("signature declined!", e);
+      console.log("Permission Denied!", e);
     }
 
     // login
@@ -50,7 +50,7 @@ export function AccountInfoContextProvider(props) {
       // console.log(data);
       // get token , is first_login
       axios
-        .post(api_host + "/user_svc/web3_login/", data)
+        .post(api_host + "/user_svc/login/", data)
         .then((response) => {
           if (response.status == 200) {
             console.log(response.data);
@@ -123,7 +123,6 @@ export function AccountInfoContextProvider(props) {
   }
 
   async function ConnectWalletHandler(props) {
-    console.log("================", props.role);
     if (typeof window.ethereum !== "undefined") {
       const signer = await setupWallet();
       login(signer, props.role);

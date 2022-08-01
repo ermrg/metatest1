@@ -1,13 +1,9 @@
 import React from "react";
 import AccountInfoContext from "./ctx/account-context";
 import { useEffect, useState, useContext } from "react";
-import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import UserTable from "./UserTable";
 import axios from "axios";
-import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 const api_host = "http://127.0.0.1:8000";
 const initialEmployee = {
   name: "",
@@ -30,17 +26,21 @@ function Employee(props) {
     <EmployeeDetail />
   ) : (
     <>
-      <Button
-        onClick={() => AccountCTX.connectWallet({ role: "employee" })}
-        className="btn btn-danger text-white"
-        variant="outline-warning"
-      >
-        Employee Login With MetaMask
-      </Button>
-      <hr />
-      <a href="/" className="btn btn-success m-3">
-        Home
-      </a>
+      <div className="container p-5">
+        <h1 className="text-danger">Employee Dashboard</h1>
+        <hr />
+        <Button
+          onClick={() => AccountCTX.connectWallet({ role: "employee" })}
+          className="btn btn-danger text-white"
+          variant="outline-warning"
+        >
+          Employee Login With MetaMask
+        </Button>
+        <hr />
+        <a href="/" className="btn btn-success m-3">
+          Home
+        </a>
+      </div>
     </>
   );
 }
@@ -69,7 +69,7 @@ function EmployeeDetail() {
   return AccountCTX.user_obj ? (
     <>
       <div className="container p-5">
-          <h1>Employee Profile</h1>
+        <h1>Employee Profile</h1>
         <div className="bg-white border rounded border-gray-200 p-2 shadow-sm">
           <div className="bg-info p-3">
             <h4>Name: {employee.name}</h4>
@@ -77,11 +77,15 @@ function EmployeeDetail() {
           </div>
           <div className="bg-warning p-3 m-4 rounded text-danger">
             <p className="lebel h4 text-muted m-3">Email: {employee.email}</p>
-            <p className="lebel h4 text-muted m-3">Address: {employee.address}</p>
+            <p className="lebel h4 text-muted m-3">
+              Address: {employee.address}
+            </p>
             <p className="lebel h4 text-muted m-3">Age: {employee.age}</p>
             <p className="lebel h4 text-muted m-3">Sex: {employee.sex}</p>
             <p className="lebel h4 text-muted m-3">SSN: {employee.ssn}</p>
-            <p className="lebel h4 text-muted m-3">Y. Salary: ${employee.salary}</p>
+            <p className="lebel h4 text-muted m-3">
+              Y. Salary: ${employee.salary}
+            </p>
             <p className="lebel h4 text-muted m-3">Title: {employee.title}</p>
             <a
               type="button"
@@ -91,7 +95,7 @@ function EmployeeDetail() {
               Edit
             </a>
           </div>
-       
+
           <hr />
           <Button onClick={AccountCTX.logout} className="btn-main">
             Logout

@@ -4,9 +4,6 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import UserTable from "./UserTable";
 import axios from "axios";
 import { Table } from "react-bootstrap";
 const api_host = "http://127.0.0.1:8000";
@@ -55,7 +52,7 @@ function Employer(props) {
   ) : (
     <>
       <div className="container p-5">
-        <h1 className="text-muted">Employeer Dashboard</h1>
+        <h1 className="text-primary">Employeer Dashboard</h1>
         <hr />
         <Button
           onClick={() => AccountCTX.connectWallet({ role: "employer" })}
